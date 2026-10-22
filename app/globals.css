@@ -65,3 +65,21 @@
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .faq-plus { transform: rotate(45deg); }
+
+/* Partner logo strip: logos move left in a continuous loop */
+.logo-marquee {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.logo-track {
+  animation: logo-scroll 32s linear infinite;
+}
+.logo-marquee:hover .logo-track {
+  animation-play-state: paused;
+}
+@keyframes logo-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-track { animation: none !important; }
+}

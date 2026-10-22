@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Contact from "@/components/Contact";
+import ChatWidget from "@/components/ChatWidget";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { Platforms, Pains, Services, Season, HowItWorks, Plans, FAQ, Footer } from "@/components/Sections";
 
 export default function Home() {
@@ -22,6 +24,8 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <WhatsAppButton />
+      <ChatWidget />
     </>
   );
 }

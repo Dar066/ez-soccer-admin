@@ -1,27 +1,36 @@
 import Image from "next/image";
-import { CONTACT_EMAIL, NAV } from "@/lib/site";
+import { CONTACT_EMAIL, NAV, SOCIAL } from "@/lib/site";
+import { FAQS } from "@/lib/faq";
 
-/* ---------- Platforms ---------- */
+/* ---------- Platforms (scrolling logo strip) ---------- */
+const LOGOS = [
+  { src: "/logos/gotsport.png", alt: "GotSport", w: 177, h: 56, cls: "h-10 w-auto rounded-md" },
+  { src: "/logos/sports-connect.png", alt: "Sports Connect", w: 678, h: 91, cls: "h-8 w-auto" },
+  { src: "/logos/nj-youth-soccer.png", alt: "New Jersey Youth Soccer", w: 263, h: 263, cls: "h-16 w-auto" },
+];
+
 export function Platforms() {
+  // One "set" repeats the three logos so the strip is wider than the screen; the set is rendered twice for a seamless loop.
+  const set = [...LOGOS, ...LOGOS, ...LOGOS];
   return (
-    <section aria-label="Platforms we support" className="border-y border-line bg-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-ink-soft">Working inside the platforms your club already pays for</p>
-        <div className="flex flex-wrap gap-3">
-          <PlatformMark short="GS" name="GotSport" />
-          <PlatformMark short="SC" name="Sports Connect" />
+    <section aria-label="Platforms and associations" className="border-y border-line bg-white">
+      <div className="mx-auto max-w-6xl px-4 pt-7 sm:px-6">
+        <p className="text-ink-soft">Working with the platforms and associations your club relies on</p>
+      </div>
+      <div className="logo-marquee relative mt-5 overflow-hidden pb-7">
+        <div className="logo-track flex w-max items-center">
+          {[0, 1].map((copy) => (
+            <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center gap-16 pr-16">
+              {set.map((l, i) => (
+                <li key={`${copy}-${i}`} className="flex h-16 items-center">
+                  <Image src={l.src} alt={copy === 0 && i < LOGOS.length ? l.alt : ""} width={l.w} height={l.h} className={l.cls} />
+                </li>
+              ))}
+            </ul>
+          ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function PlatformMark({ short, name }: { short: string; name: string }) {
-  return (
-    <span className="inline-flex items-center gap-3 rounded-full border border-line bg-chalk py-1.5 pl-1.5 pr-5 font-semibold">
-      <span className="grid size-9 place-items-center rounded-full bg-ink font-display text-lg font-bold text-chalk">{short}</span>
-      {name}
-    </span>
   );
 }
 
@@ -212,43 +221,54 @@ export function HowItWorks() {
   );
 }
 
-/* ---------- Ways to work together ---------- */
-const PLANS = [
+
+/* ---------- Packages ---------- */
+const PACKAGES = [
   {
-    name: "Season surge",
-    fit: "For clubs that cope most of the year but drown during registration and tryouts.",
-    items: ["Registration and tryout windows", "Family help inbox", "Roster and card deadlines"],
+    name: "Starter Support",
+    price: 199,
+    fit: "For small clubs needing occasional help.",
+    items: ["Up to 5 hours of administrative work monthly", "Basic registration and document tracking", "Email support and a monthly status summary"],
   },
   {
-    name: "Ongoing admin",
-    fit: "For clubs that want one steady pair of hands, every month of the year.",
-    items: ["A set number of hours each month", "Weekly update to the board", "Priority during peak weeks"],
+    name: "Club Admin Plus",
+    price: 449,
+    fit: "For clubs that need regular administrative support.",
+    items: ["Up to 12 hours monthly", "Player and staff registration support", "Document checks and team assignment support", "Roster and ID card preparation"],
     featured: true,
   },
   {
-    name: "One-off project",
-    fit: "For a specific job that keeps getting pushed to next season.",
-    items: ["Data clean-up and archiving", "Platform setup for a new season", "Document audit"],
+    name: "Season Operations Partner",
+    price: 799,
+    fit: "For clubs requiring ongoing support and seasonal coordination.",
+    items: ["Up to 24 hours monthly", "Weekly task coordination and tracking", "Registration, roster and staff administration", "Priority scheduling by agreement"],
   },
 ];
 
 export function Plans() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-32">
+    <section id="packages" className="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-32">
       <div className="max-w-2xl">
-        <h2 className="text-[clamp(2.8rem,6vw,4.5rem)] font-extrabold">Pick the kind of help you need</h2>
-        <p className="mt-5 text-lg text-ink-soft">Pricing depends on club size and scope. We quote after the call, with no long contract.</p>
+        <h2 className="text-[clamp(2.8rem,6vw,4.5rem)] font-extrabold">Our packages &amp; services</h2>
+        <p className="mt-5 text-lg text-ink-soft">Flexible administrative support designed for youth soccer clubs of all sizes.</p>
       </div>
-      <div className="mt-14 grid gap-6 lg:grid-cols-3">
-        {PLANS.map((p) => (
+      <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+        {PACKAGES.map((p) => (
           <article
             key={p.name}
-            className={`flex flex-col rounded-[var(--radius-sheet)] p-8 ${
-              p.featured ? "bg-ink text-chalk" : "border border-line bg-white"
+            className={`relative flex flex-col rounded-[var(--radius-sheet)] p-8 ${
+              p.featured ? "bg-ink text-chalk ring-2 ring-pitch" : "border border-line bg-white"
             }`}
           >
-            <h3 className="text-4xl font-bold">{p.name}</h3>
-            <p className={`mt-4 ${p.featured ? "text-chalk/80" : "text-ink-soft"}`}>{p.fit}</p>
+            {p.featured && (
+              <span className="absolute -top-3.5 left-8 rounded-full bg-pitch px-4 py-1 text-sm font-semibold text-white">Most popular</span>
+            )}
+            <h3 className="text-[2.1rem] font-bold lg:min-h-[1.9em]">{p.name}</h3>
+            <p className="mt-4 flex items-baseline gap-1">
+              <span className={`font-display text-6xl font-extrabold ${p.featured ? "text-white" : "text-pitch"}`}>${p.price}</span>
+              <span className={p.featured ? "text-chalk/75" : "text-ink-soft"}>/mo</span>
+            </p>
+            <p className={`mt-3 ${p.featured ? "text-chalk/80" : "text-ink-soft"}`}>{p.fit}</p>
             <ul className={`mt-6 grid gap-3 border-t pt-6 ${p.featured ? "border-white/15" : "border-line"}`}>
               {p.items.map((x) => (
                 <li key={x} className="flex gap-3">
@@ -259,52 +279,34 @@ export function Plans() {
                 </li>
               ))}
             </ul>
+            <p className={`mt-auto pt-6 text-sm ${p.featured ? "text-chalk/75" : "text-ink-soft"}`}>
+              Additional hours: <span className="font-semibold">$35/hour</span>
+            </p>
             <a
               href="#contact"
-              className={`mt-8 rounded-full py-3.5 text-center font-semibold ${
+              aria-label={`Ask about ${p.name}`}
+              className={`mt-5 rounded-full py-3.5 text-center font-semibold ${
                 p.featured ? "bg-pitch text-white hover:bg-pitch-deep" : "border-2 border-ink hover:bg-ink hover:text-chalk"
               }`}
             >
-              Ask about {p.name.toLowerCase()}
+              Ask about this package
             </a>
           </article>
         ))}
       </div>
+      <p className="mt-8 text-sm text-ink-soft">Prices are starting points in USD. Scope, included hours and turnaround are agreed in writing before work begins.</p>
     </section>
   );
 }
 
 /* ---------- FAQ ---------- */
-const FAQS = [
-  {
-    q: "Do you need our club's login?",
-    a: "No shared passwords. Your club creates an admin role for us on GotSport or Sports Connect, with only the permissions the work needs. You can remove it at any time.",
-  },
-  {
-    q: "Does this replace our registrar?",
-    a: "It supports them. Your registrar and board keep decisions and oversight. We take on the repetitive work so they're not doing it alone.",
-  },
-  {
-    q: "How do you handle player and family data?",
-    a: "We only work inside the access your club grants, and we follow your club's and league's data and safeguarding policies. Nothing is copied to outside tools without your approval.",
-  },
-  {
-    q: "How soon can you start?",
-    a: "Usually within a week or two of the call, depending on how close your next deadline is. If registration opens soon, tell us on the call and we'll prioritize setup.",
-  },
-  {
-    q: "We use a different platform. Can you still help?",
-    a: "We specialize in GotSport and Sports Connect. If your club uses something else, ask anyway and we'll tell you honestly whether we're a good fit.",
-  },
-];
-
 export function FAQ() {
   return (
     <section id="faq" className="border-t border-line bg-white">
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
         <h2 className="text-[clamp(2.8rem,6vw,4.5rem)] font-extrabold">Questions clubs ask us</h2>
         <div className="border-t border-line">
-          {FAQS.map((f) => (
+          {FAQS.filter((f) => f.inSection).map((f) => (
             <details key={f.q} className="group border-b border-line">
               <summary className="flex cursor-pointer items-center justify-between gap-6 py-6 text-lg font-semibold">
                 {f.q}
@@ -322,20 +324,52 @@ export function FAQ() {
 }
 
 /* ---------- Footer ---------- */
+const SOCIAL_ICONS: Record<(typeof SOCIAL)[number]["name"], React.ReactNode> = {
+  LinkedIn: <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.6 4.77 6V21h-4v-5c0-1.2-.02-2.73-1.67-2.73-1.67 0-1.93 1.3-1.93 2.64V21h-4V9.75Z" />,
+  Instagram: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+      <circle cx="17.3" cy="6.7" r="1.2" />
+    </>
+  ),
+  Facebook: <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.87.25-1.46 1.5-1.46H16.6V4.46A21 21 0 0 0 14.3 4.3c-2.3 0-3.8 1.4-3.8 3.9v2.3H7.9v3h2.6V21h3Z" />,
+  X: <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.57L16.67 19.2Z" />,
+};
+
 export function Footer() {
   return (
-    <footer className="bg-chalk">
+    <footer className="bg-[#0B2A4A] text-chalk">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <Image src="/logo-wordmark.png" alt="EZ Soccer Admin" width={454} height={234} className="h-14 w-auto" />
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-7 gap-y-2 text-ink-soft">
-          {NAV.map((n) => (
-            <a key={n.href} href={n.href} className="hover:text-ink">{n.label}</a>
-          ))}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-ink">{CONTACT_EMAIL}</a>
-        </nav>
+        <Image src="/logo-wordmark-light.png" alt="EZ Soccer Admin" width={454} height={234} className="h-14 w-auto" />
+        <div className="flex flex-col gap-6 md:items-end">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-7 gap-y-2 text-chalk/75">
+            {NAV.map((n) => (
+              <a key={n.href} href={n.href} className="hover:text-white">{n.label}</a>
+            ))}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white">{CONTACT_EMAIL}</a>
+          </nav>
+          <ul className="flex gap-3">
+            {SOCIAL.map((s) => (
+              <li key={s.name}>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`EZ Soccer Admin on ${s.name}`}
+                  className="grid size-10 place-items-center rounded-full border border-white/20 text-chalk/85 hover:border-pitch hover:bg-pitch hover:text-white"
+                >
+                  <svg aria-hidden viewBox="0 0 24 24" className="size-[18px]" fill="currentColor">
+                    {SOCIAL_ICONS[s.name]}
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-sm text-ink-soft sm:px-6">
+      <div className="border-t border-white/15">
+        <p className="mx-auto max-w-6xl px-4 py-5 text-sm text-chalk/70 sm:px-6">
           © {new Date().getFullYear()} EZ Soccer Admin. We do the admin. You do the soccer.
         </p>
       </div>
